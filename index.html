@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Divide in Divine</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- Opening sequence (scale primes before main UI) -->
+    <section id="loading-screen" class="screen is-active" aria-live="polite">
+      <div class="loader">
+        <div class="loader__title">Divide in Divine</div>
+        <div class="loader__subtitle">mythic scale · measure of balance</div>
+        <div class="loader__bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+          <span class="loader__bar-fill" id="loader-bar-fill"></span>
+        </div>
+        <div class="loader__hint">The balance finds its center.</div>
+      </div>
+    </section>
+
+    <!-- Main interactive app (hidden until opening sequence finishes) -->
+    <main id="main-screen" class="screen" aria-label="Divide in Divine">
+      <header class="top-header">
+        <div class="top-header__status" id="status-text">Awaiting input...</div>
+      </header>
+
+      <section class="stage">
+        <section class="scale" aria-label="Weighing scale">
+          <div class="scale__frame">
+            <div class="balance-scale">
+              <div
+                class="balance-scale__beam"
+                id="balance-beam"
+                style="--beam-angle: 0deg; --left-hang-drop: 0px; --right-hang-drop: 0px"
+              >
+                <div class="balance-scale__bar" aria-hidden="true"></div>
+                <div class="balance-scale__hang balance-scale__hang--left">
+                  <div class="pan pan--left" id="left-pan" aria-label="Left cloud (drop a deity here)">
+                    <div class="pan__content" id="left-pan-content"></div>
+                  </div>
+                  <div class="balance-scale__cord" aria-hidden="true"></div>
+                </div>
+                <div class="balance-scale__hang balance-scale__hang--right">
+                  <div class="pan pan--right" id="right-pan" aria-label="Right cloud (drop a deity here)">
+                    <div class="pan__content" id="right-pan-content"></div>
+                  </div>
+                  <div class="balance-scale__cord" aria-hidden="true"></div>
+                </div>
+              </div>
+              <div class="balance-scale__rig" aria-hidden="true">
+                <div class="balance-scale__fulcrum"></div>
+                <div class="balance-scale__pillar"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- Bottom rectangular info box -->
+      <section
+        id="bottom-panel"
+        class="bottom-panel is-hidden"
+        aria-label="Figure name and description"
+      >
+        <div class="bottom-panel__inner">
+          <div class="bottom-panel__body">
+            <h2 id="info-name" class="info-name">No figure selected</h2>
+            <p id="info-blurb" class="info-blurb">Select a figure to read a short description.</p>
+          </div>
+
+          <div class="bottom-panel__actions">
+            <button class="btn btn--primary" id="weigh-selected-btn" type="button">WEIGH SELECTED</button>
+            <button class="btn btn--ghost" id="reset-btn" type="button">RESET</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3x7 character grid (hidden until final step) -->
+      <section id="grid-wrap" class="grid-wrap" aria-label="Character grid">
+        <div class="grid-header">
+          <div class="grid-header__title">Characters</div>
+          <div class="grid-header__meta" id="grid-meta">19 figures</div>
+        </div>
+        <div class="char-grid" id="char-grid"></div>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,593 @@
+/* Night-heavens theme: deep blue → navy, subtle starfield glow. */
+:root {
+  --bg-zenith: #0f2847;
+  --bg-horizon: #0a1628;
+  --bg-deep: #030712;
+  --panel: rgba(30, 58, 95, 0.22);
+  --panel-solid: rgba(8, 15, 28, 0.88);
+  --text: #e8eef7;
+  --muted: rgba(200, 214, 232, 0.72);
+  --line: rgba(255, 255, 255, 0.1);
+  --accent: #8ab4f8;
+  --accent2: #5b8fc7;
+  --accent-warm: #c9a86c;
+  --danger: #b85c5c;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+  /* Space so the last grid row can scroll above the fixed bottom panel */
+  --bottom-panel-clearance: clamp(128px, 20vh, 188px);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  min-height: 100%;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+  overflow-x: hidden;
+  background-color: var(--bg-deep);
+  background-image:
+    radial-gradient(ellipse 140% 100% at 50% -30%, rgba(80, 130, 200, 0.22), transparent 58%),
+    radial-gradient(ellipse 90% 70% at 100% 20%, rgba(45, 80, 130, 0.18), transparent 52%),
+    radial-gradient(ellipse 80% 60% at 0% 90%, rgba(25, 50, 90, 0.35), transparent 50%),
+    radial-gradient(1.5px 1.5px at 12% 18%, rgba(255, 255, 255, 0.35), transparent 100%),
+    radial-gradient(1px 1px at 78% 42%, rgba(255, 255, 255, 0.28), transparent 100%),
+    radial-gradient(1px 1px at 35% 65%, rgba(255, 255, 255, 0.22), transparent 100%),
+    radial-gradient(1px 1px at 88% 78%, rgba(255, 255, 255, 0.2), transparent 100%),
+    radial-gradient(1px 1px at 22% 88%, rgba(255, 255, 255, 0.18), transparent 100%),
+    linear-gradient(168deg, var(--bg-zenith) 0%, var(--bg-horizon) 45%, #050a14 78%, var(--bg-deep) 100%);
+  background-attachment: fixed;
+}
+
+.screen {
+  min-height: 100vh;
+  display: none;
+}
+
+.screen.is-active {
+  display: block;
+}
+
+/* ---------------- Loading screen ---------------- */
+.loader {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 24px;
+}
+
+.loader__title {
+  font-size: 26px;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-shadow: 0 0 24px rgba(138, 180, 248, 0.35), 0 0 48px rgba(80, 130, 200, 0.2);
+}
+
+.loader__subtitle {
+  color: var(--muted);
+}
+
+.loader__bar {
+  width: min(520px, 88vw);
+  height: 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+}
+
+.loader__bar-fill {
+  display: block;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, rgba(138, 180, 248, 0.95), rgba(91, 143, 199, 0.95));
+  box-shadow: 0 0 16px rgba(138, 180, 248, 0.35);
+}
+
+.loader__hint {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ---------------- App layout ---------------- */
+.top-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.03), transparent);
+}
+
+.top-header__status {
+  color: var(--muted);
+  font-size: 13px;
+  text-align: right;
+  max-width: min(720px, 100%);
+}
+
+.stage {
+  padding: 26px 18px 10px;
+}
+
+.scale {
+  max-width: 980px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+/* Reference layout ~1011×400: scale block fits this visual weight */
+.scale__frame {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 22px 12px 24px;
+  position: relative;
+  overflow: visible;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.scale__frame::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background:
+    radial-gradient(900px 300px at 20% -40%, rgba(100, 160, 220, 0.18), transparent 60%),
+    radial-gradient(700px 260px at 85% 0%, rgba(60, 100, 160, 0.14), transparent 55%);
+  pointer-events: none;
+}
+
+/* ---------------- Traditional beam balance (tilting pans) ---------------- */
+.balance-scale {
+  /* Match reference: beam ~380×10px; pillar ~50×95px + triangle ~25px ≈ 120px total */
+  --bar-h: 10px;
+  --pillar-w: 50px;
+  --pillar-h: 95px;
+  --fulcrum-half: 25px;
+  --fulcrum-h: 25px;
+  --beam-span: min(100%, 380px);
+  --cloud-rise: clamp(100px, 26vw, 150px);
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  min-height: 0;
+  margin-top: 12px;
+  /* Room for clouds sitting above the beam (rod joins cloud bottom to bar). */
+  padding: var(--cloud-rise) 8px clamp(18px, 4vw, 32px);
+  box-sizing: border-box;
+}
+
+.balance-scale__beam {
+  position: relative;
+  z-index: 2;
+  width: var(--beam-span);
+  max-width: var(--beam-span);
+  height: var(--bar-h);
+  margin: 0 auto;
+  box-sizing: border-box;
+  transform-origin: 50% var(--bar-h);
+  transform: rotate(var(--beam-angle, 0deg));
+  transition: transform 0.75s cubic-bezier(0.33, 1, 0.45, 1);
+  pointer-events: none;
+  overflow: visible;
+}
+
+.balance-scale__beam .pan {
+  pointer-events: auto;
+}
+
+.balance-scale__bar {
+  position: relative;
+  z-index: 3;
+  height: var(--bar-h);
+  width: 100%;
+  border-radius: 5px;
+  background: linear-gradient(
+    180deg,
+    #f0d78c 0%,
+    #c9a227 22%,
+    #8a7020 78%,
+    #5c4a15 100%
+  );
+  box-shadow:
+    0 2px 0 rgba(255, 255, 255, 0.15) inset,
+    0 4px 12px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(60, 48, 12, 0.5);
+}
+
+/* Pan above cord: golden rod joins bottom-center of cloud to the beam. Hang anchored to beam end (bottom of bar). */
+.balance-scale__hang {
+  position: absolute;
+  bottom: 0;
+  top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.balance-scale__hang--left {
+  left: 0;
+  transform: translateX(-50%) translateY(var(--left-hang-drop, 0px));
+  transition: transform 0.75s cubic-bezier(0.33, 1, 0.45, 1);
+}
+
+.balance-scale__hang--right {
+  right: 0;
+  transform: translateX(50%) translateY(var(--right-hang-drop, 0px));
+  transition: transform 0.75s cubic-bezier(0.33, 1, 0.45, 1);
+}
+
+.balance-scale__cord {
+  width: 3px;
+  height: clamp(18px, 4vw, 26px);
+  flex-shrink: 0;
+  background: linear-gradient(90deg, #4a3c18, #a08630, #4a3c18);
+  border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  margin-top: -1px;
+}
+
+.balance-scale__rig {
+  position: absolute;
+  left: 50%;
+  top: var(--cloud-rise);
+  padding-top: var(--bar-h);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.balance-scale__fulcrum {
+  width: 0;
+  height: 0;
+  border-left: var(--fulcrum-half) solid transparent;
+  border-right: var(--fulcrum-half) solid transparent;
+  border-bottom: var(--fulcrum-h) solid #6b5a2e;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.35));
+}
+
+.balance-scale__pillar {
+  width: var(--pillar-w);
+  height: var(--pillar-h);
+  margin-top: -1px;
+  background: linear-gradient(90deg, #3d3520 0%, #6b5a3a 35%, #8a7848 50%, #6b5a3a 65%, #3d3520 100%);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.pan {
+  min-height: clamp(100px, 26vw, 140px);
+  width: min(200px, 36vw);
+  max-width: 100%;
+  border-radius: 0;
+  border: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  /* Fit full SVG in the box so left/right cloud lobes are not clipped */
+  background-position: center bottom;
+  background-size: contain;
+  position: relative;
+  overflow: visible;
+  /* Keep cloud plates level while the beam tilts (like freely hanging pans). */
+  transform: rotate(calc(-1 * var(--beam-angle, 0deg)));
+  transition: transform 0.75s cubic-bezier(0.33, 1, 0.45, 1);
+}
+
+.pan--left {
+  outline: none;
+  background-image: url("./assets/cloud-plate-left.svg");
+}
+
+.pan--right {
+  background-image: url("./assets/cloud-plate-right.svg");
+}
+
+.pan__content {
+  position: absolute;
+  inset: 0;
+  padding: clamp(32px, 8vw, 44px) 8px clamp(18px, 4vw, 24px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.pan--left.is-dragover,
+.pan--right.is-dragover {
+  filter: drop-shadow(0 0 18px rgba(138, 180, 248, 0.85)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.35));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .balance-scale__beam,
+  .balance-scale__hang--left,
+  .balance-scale__hang--right,
+  .pan {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ---------------- Character tiles (PNG thumbnails) ---------------- */
+.char-tile {
+  width: 100%;
+  min-width: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 6px;
+  cursor: grab;
+  user-select: none;
+}
+
+.char-tile:active {
+  cursor: grabbing;
+}
+
+.char-tile__thumb {
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.char-tile__thumb img {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center center;
+  pointer-events: none;
+}
+
+/* Weighed figure on cloud (PNG only, no panel behind). --weight-drop: lighter gods lower (set in JS). */
+.pan__chip {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  max-height: min(150px, 72%);
+  --weight-drop: 0px;
+  transform: translateY(calc(-10px + var(--weight-drop)));
+  animation: dropPop 460ms cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  pointer-events: none;
+}
+
+.pan__chip__thumb {
+  width: 100%;
+  max-height: min(138px, 62%);
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pan__chip__thumb img {
+  display: block;
+  max-width: 100%;
+  max-height: min(132px, 26vw);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  object-position: center center;
+}
+
+@keyframes dropPop {
+  0% {
+    opacity: 0;
+    transform: translateY(calc(-20px + var(--weight-drop))) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(calc(-10px + var(--weight-drop))) scale(1);
+  }
+}
+
+/* ---------------- Bottom panel ---------------- */
+.bottom-panel {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 20;
+  background: rgba(15, 22, 36, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.bottom-panel.is-hidden {
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+}
+
+.bottom-panel__inner {
+  padding: 9px 12px 8px;
+}
+
+.bottom-panel__body {
+  margin-bottom: 6px;
+}
+
+.info-name {
+  margin: 0 0 5px;
+  text-align: left;
+  color: rgba(230, 233, 239, 0.95);
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.info-blurb {
+  margin: 0;
+  color: rgba(200, 214, 232, 0.88);
+  font-size: 11px;
+  line-height: 1.38;
+  max-width: 72ch;
+}
+
+.bottom-panel__actions {
+  margin-top: 5px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(230, 233, 239, 0.92);
+  border-radius: 10px;
+  padding: 7px 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.btn:focus {
+  outline: 2px solid rgba(138, 180, 248, 0.45);
+  outline-offset: 2px;
+}
+
+.btn--primary {
+  border-color: rgba(138, 180, 248, 0.4);
+  background: rgba(80, 130, 200, 0.18);
+}
+
+.btn--ghost {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* ---------------- Grid ---------------- */
+.grid-wrap {
+  padding: 14px 18px calc(18px + var(--bottom-panel-clearance));
+  max-width: 980px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 500ms ease, transform 500ms ease;
+  pointer-events: none;
+}
+
+.grid-wrap.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.grid-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.grid-header__title {
+  color: rgba(230, 233, 239, 0.95);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.grid-header__meta {
+  font-size: 12px;
+}
+
+.char-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  max-height: min(48vh, 420px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior: contain;
+  padding-right: 4px;
+  padding-bottom: var(--bottom-panel-clearance);
+  scroll-padding-bottom: var(--bottom-panel-clearance);
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(138, 180, 248, 0.45) rgba(255, 255, 255, 0.06);
+}
+
+.char-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.char-grid::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+}
+
+.char-grid::-webkit-scrollbar-thumb {
+  background: rgba(138, 180, 248, 0.35);
+  border-radius: 8px;
+}
+
+.char-grid::-webkit-scrollbar-thumb:hover {
+  background: rgba(138, 180, 248, 0.5);
+}
+
+/* Make the grid fit smaller screens; tile sizes will shrink automatically. */
+@media (max-width: 1100px) {
+  .char-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .char-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .char-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+

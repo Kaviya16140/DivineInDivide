@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Source List • Divide in Divine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #050a12;
+      --bg-gradient-top: #0c1f3d;
+      --bg-gradient-bottom: #000000;
+      --text: #ffffff;
+      --gold: #d4af37;
+      --maxw: 1120px;
+      --font-mono: "Roboto Mono", ui-monospace, "Cascadia Code", monospace;
+      --page-gradient-black-start: 74%;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        var(--bg-gradient-top) 0%,
+        #071018 28%,
+        #030508 52%,
+        #08080a 64%,
+        var(--bg-gradient-bottom) var(--page-gradient-black-start),
+        var(--bg-gradient-bottom) 100%
+      );
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: rgba(255, 255, 255, 0.92);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      line-height: 1.75;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .site-header {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 28px 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      width: 36px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .logo img {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links a,
+    .nav-links .nav-link--current {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: 1;
+      padding: 10px 14px;
+      border-radius: 999px;
+    }
+
+    .nav-links a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .nav-links .nav-link--current {
+      color: rgba(255, 255, 255, 0.55);
+      cursor: default;
+      user-select: none;
+      pointer-events: none;
+      opacity: 1;
+    }
+
+    main {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 56px) clamp(20px, 4vw, 32px) clamp(56px, 10vw, 96px);
+    }
+
+    .kicker {
+      margin: 0 0 14px;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.62);
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0 0 18px;
+      font-family: "Oswald", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 7vw, 4.25rem);
+      line-height: 0.95;
+      letter-spacing: 0.01em;
+      text-transform: uppercase;
+      text-align: center;
+      background: linear-gradient(180deg, #ffffff 0%, #ffffff 10%, #7a8796 48%, #2a3340 82%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45));
+    }
+
+    .lede {
+      margin: 0 auto 26px;
+      max-width: 72ch;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    @media (min-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 22px;
+        grid-auto-rows: 1fr; /* make both columns equally tall */
+      }
+
+      .card {
+        min-height: clamp(680px, 80vh, 980px); /* longer columns without widening page */
+      }
+    }
+
+    .card {
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(0, 0, 0, 0.22);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+      padding: 24px 24px 18px;
+      overflow-x: hidden; /* prevent sideways scrolling */
+    }
+
+    .card h2 {
+      margin: 0 0 12px;
+      font-family: "Oswald", system-ui, sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .sources {
+      margin: 0;
+      padding-left: 2.1em; /* ensure ordered-list numbers never clip */
+      padding-right: 6px; /* extra breathing room on the right */
+    }
+
+    .sources li {
+      margin: 0 0 10px;
+      color: rgba(255, 255, 255, 0.82);
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .sources a {
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .muted {
+      color: rgba(255, 255, 255, 0.62);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="./index.html#top" aria-label="Home"
+      ><img src="assets/svgs/Logo.svg" alt="" width="22" height="22"
+    /></a>
+    <nav class="nav-links">
+      <a href="./index.html" id="home-link">← Home</a>
+      <span class="nav-link--current" aria-current="page">Source List →</span>
+      <a class="nav-link--context" href="./context.html">Context →</a>
+    </nav>
+  </header>
+
+  <main>
+    <p class="kicker">Divide in Divine</p>
+    <h1>Source List</h1>
+    <p class="lede">
+      References used for the images and research text across <span class="muted">this project</span>.
+    </p>
+
+    <section class="grid" aria-label="Sources">
+      <article class="card" aria-label="Image source list">
+        <h2>Image sources</h2>
+        <ol class="sources" id="sources-images"></ol>
+      </article>
+
+      <article class="card" aria-label="Information source list">
+        <h2>Information sources</h2>
+        <ol class="sources" id="sources-info"></ol>
+      </article>
+    </section>
+  </main>
+
+  <audio id="bg-audio" src="assets/music/DID_Sound.mp3" loop preload="auto"></audio>
+  <audio id="click-audio" src="assets/music/Mouse%20click.mp3" preload="auto"></audio>
+  <script>
+    (function () {
+      // Background audio: browsers may block autoplay until first user gesture.
+      (function () {
+        var audio = document.getElementById("bg-audio");
+        if (!audio) return;
+        audio.volume = 0.375;
+        audio.playsInline = true;
+        audio.preload = "auto";
+
+        var KEY_T = "did-audio-time";
+        var KEY_P = "did-audio-playing";
+
+        function safeGet(key) {
+          try {
+            return sessionStorage.getItem(key);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function safeSet(key, val) {
+          try {
+            sessionStorage.setItem(key, String(val));
+          } catch (e) {}
+        }
+
+        function restoreTimeWhenReady() {
+          var raw = safeGet(KEY_T);
+          var t = raw ? parseFloat(raw) : NaN;
+          if (!isFinite(t) || t < 0) return;
+
+          function apply() {
+            try {
+              var dur = audio.duration;
+              if (isFinite(dur) && dur > 0) {
+                audio.currentTime = t % dur;
+              } else {
+                audio.currentTime = t;
+              }
+            } catch (e) {}
+          }
+
+          if (isFinite(audio.duration) && audio.duration > 0) {
+            apply();
+          } else {
+            audio.addEventListener("loadedmetadata", apply, { once: true });
+          }
+        }
+
+        var gateShown = false;
+
+        function removeSoundGate() {
+          try {
+            var el = document.getElementById("sound-gate");
+            if (el && el.parentNode) el.parentNode.removeChild(el);
+          } catch (e) {}
+        }
+
+        function showSoundGate() {
+          if (gateShown) return;
+          gateShown = true;
+          try {
+            if (document.getElementById("sound-gate")) return;
+            var wrap = document.createElement("div");
+            wrap.id = "sound-gate";
+            wrap.style.position = "fixed";
+            wrap.style.left = "50%";
+            wrap.style.bottom = "16px";
+            wrap.style.transform = "translateX(-50%)";
+            wrap.style.zIndex = "9999";
+            wrap.style.padding = "12px 14px";
+            wrap.style.borderRadius = "14px";
+            wrap.style.background = "rgba(0, 0, 0, 0.45)";
+            wrap.style.backdropFilter = "blur(10px)";
+            wrap.style.boxShadow = "0 0 0 1px rgba(212, 175, 55, 0.22), 0 18px 50px rgba(0, 0, 0, 0.55)";
+            wrap.style.color = "rgba(255, 255, 255, 0.92)";
+            wrap.style.fontSize = "14px";
+            wrap.style.lineHeight = "1.35";
+            wrap.style.textAlign = "center";
+            wrap.style.maxWidth = "260px";
+            wrap.innerHTML = 'click anywhere to enable <span style="color: var(--gold, #d4af37)">sound</span>';
+            document.body.appendChild(wrap);
+          } catch (e) {}
+        }
+
+        function tryPlay(fromUserGesture) {
+          try {
+            if (fromUserGesture) {
+              audio.muted = false;
+              audio.volume = 0.375;
+            }
+            var p = audio.play();
+            if (p && typeof p.then === "function") {
+              p.then(function () {
+                removeSoundGate();
+              }).catch(function () {
+                showSoundGate();
+              });
+            }
+          } catch (e) {}
+        }
+
+        restoreTimeWhenReady();
+
+        function persist() {
+          try {
+            if (!isFinite(audio.currentTime)) return;
+            safeSet(KEY_T, audio.currentTime);
+            safeSet(KEY_P, !audio.paused && !audio.ended ? "1" : "0");
+          } catch (e) {}
+        }
+
+        window.addEventListener("pagehide", persist, { capture: true });
+        window.addEventListener("beforeunload", persist, { capture: true });
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "hidden") persist();
+        });
+
+        window.addEventListener("load", tryPlay, { passive: true });
+        document.addEventListener(
+          "pointerdown",
+          function () {
+            tryPlay(true);
+          },
+          { passive: true, once: true }
+        );
+        document.addEventListener(
+          "keydown",
+          function () {
+            tryPlay(true);
+          },
+          { passive: true, once: true }
+        );
+
+        if (safeGet(KEY_P) === "1") {
+          window.addEventListener("load", tryPlay, { passive: true, once: true });
+        }
+      })();
+
+      // Click SFX on any interaction.
+      (function () {
+        var sfx = document.getElementById("click-audio");
+        if (!sfx) return;
+        sfx.volume = 0.55;
+        sfx.preload = "auto";
+        sfx.playsInline = true;
+
+        var pool = [];
+        function makePlayer() {
+          try {
+            var a = new Audio(sfx.currentSrc || sfx.src);
+            a.preload = "auto";
+            a.volume = sfx.volume;
+            a.playsInline = true;
+            return a;
+          } catch (e) {
+            return null;
+          }
+        }
+        function getPlayer() {
+          for (var i = 0; i < pool.length; i++) {
+            var a = pool[i];
+            if (a && (a.paused || a.ended)) return a;
+          }
+          var fresh = makePlayer();
+          if (fresh) pool.push(fresh);
+          return fresh || sfx;
+        }
+        function playClick() {
+          var a = getPlayer();
+          try {
+            a.currentTime = 0;
+          } catch (e) {}
+          try {
+            var p = a.play();
+            if (p && typeof p.catch === "function") p.catch(function () {});
+          } catch (e) {}
+        }
+
+        // Delay link navigation so the click sound is audible.
+        function isPlainLeftClick(e) {
+          return (
+            !e.defaultPrevented &&
+            e.button === 0 &&
+            !e.metaKey &&
+            !e.ctrlKey &&
+            !e.shiftKey &&
+            !e.altKey
+          );
+        }
+
+        function isClickableTarget(el) {
+          if (!el || !el.closest) return false;
+          return !!el.closest(
+            "a[href],button,input[type='button'],input[type='submit'],input[type='reset'],[role='button'],summary,label"
+          );
+        }
+
+        function shouldInterceptHref(href) {
+          if (!href) return false;
+          if (href[0] === "#") return false;
+          if (/^(mailto:|tel:|javascript:)/i.test(href)) return false;
+          return true;
+        }
+
+        document.addEventListener(
+          "click",
+          function (e) {
+            if (!isClickableTarget(e.target)) return;
+            playClick();
+            if (!isPlainLeftClick(e)) return;
+            var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+            if (!a) return;
+            if (a.target && a.target !== "_self") return;
+            var href = a.getAttribute("href") || "";
+            if (!shouldInterceptHref(href)) return;
+
+            e.preventDefault();
+            setTimeout(function () {
+              window.location.href = href;
+            }, 120);
+          },
+          true
+        );
+      })();
+      // When navigating back home from Source List, skip the home auto-scroll.
+      var homeLink = document.getElementById("home-link");
+      if (homeLink) {
+        homeLink.addEventListener("click", function () {
+          try {
+            sessionStorage.setItem("divide-skip-footer-scroll", "1");
+          } catch (e) {}
+        });
+      }
+
+      var listImages = document.getElementById("sources-images");
+      var listInfo = document.getElementById("sources-info");
+
+      if (!listImages || !listInfo) return;
+
+      function parseSections(text) {
+        var t = String(text || "").replace(/\r\n/g, "\n");
+        var lines = t.split("\n");
+        var sections = { images: [], storyboard: [], storyboardLabel: "", info: [] };
+        var mode = null;
+
+        function setMode(s) {
+          if (/^image source/i.test(s)) return "images";
+          if (/^storyboard image sources/i.test(s)) return "storyboard";
+          if (/^information source/i.test(s)) return "info";
+          return null;
+        }
+
+        function splitInlineStoryboard(s) {
+          // Handles cases like:
+          // "Storyboard Image sources: a. ... b. ... c. ..."
+          var out = [];
+          var rest = s.replace(/^storyboard image sources\s*:\s*/i, "").trim();
+          if (!rest) return out;
+          var parts = rest.split(/\s+(?=[a-z]\.\s)/i);
+          for (var i = 0; i < parts.length; i++) {
+            var p = parts[i].trim();
+            if (!p) continue;
+            out.push(p.replace(/^[a-z]\.\s*/i, "").trim());
+          }
+          return out;
+        }
+
+        for (var i = 0; i < lines.length; i++) {
+          var raw = lines[i];
+          var s = raw.trim();
+          if (!s) continue;
+
+          // Special-case: storyboard sources provided on a single line.
+          if (/^storyboard image sources\s*:/i.test(s)) {
+            mode = "storyboard";
+            sections.storyboardLabel = "Storyboard Image sources:";
+            var inlineItems = splitInlineStoryboard(s);
+            if (inlineItems.length) {
+              sections.storyboard = sections.storyboard.concat(inlineItems);
+            }
+            continue;
+          }
+
+          var m = setMode(s);
+          if (m) {
+            mode = m;
+            continue;
+          }
+          if (!mode) continue;
+          // Skip obvious section labels that might repeat.
+          if (/^image source/i.test(s) || /^information source/i.test(s)) continue;
+          if (/^source:?$/i.test(s)) continue;
+          sections[mode].push(s.replace(/^\w+\.\s*/, "").trim());
+        }
+        return sections;
+      }
+
+      function renderList(ol, items) {
+        ol.innerHTML = "";
+        items.forEach(function (txt) {
+          var li = document.createElement("li");
+          li.textContent = txt;
+          ol.appendChild(li);
+        });
+      }
+
+      try {
+        fetch("./assets/text/Source_List.txt", { cache: "no-store" })
+          .then(function (r) {
+            if (!r.ok) throw new Error("Source_List.txt fetch failed");
+            return r.text();
+          })
+          .then(function (txt) {
+            var sections = parseSections(txt);
+            if (sections.storyboard.length) {
+              // Put storyboard image sources as one extra numbered item within Image sources.
+              var label = sections.storyboardLabel || "Storyboard Image sources:";
+              var abc = ["a", "b", "c"];
+              var sb = sections.storyboard
+                .map(function (t, idx) {
+                  var p = abc[idx] || String.fromCharCode(97 + (idx % 26));
+                  return p + ". " + t;
+                })
+                .join(" ");
+              sections.images = sections.images.concat([label + " " + sb]);
+            }
+            if (sections.images.length) renderList(listImages, sections.images);
+            if (sections.info.length) renderList(listInfo, sections.info);
+          })
+          .catch(function () {});
+      } catch (e) {}
+    })();
+  </script>
+</body>
+</html>
+

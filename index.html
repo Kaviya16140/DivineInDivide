@@ -1,0 +1,2032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Divide in Divine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      --bg: #050a12;
+      --bg-gradient-top: #0c1f3d;
+      --bg-gradient-bottom: #000000;
+      --text: #ffffff;
+      --gold: #d4af37;
+      --maxw: 1120px;
+      --marquee-pink: #ff2a7a;
+      --chevron: #ff7a1a;
+      --font-mono: "Roboto Mono", ui-monospace, "Cascadia Code", monospace;
+      /* Page gradient reaches solid black here (document height %), so the bottom band—including above the footer image—is #000, not only the last pixel of the page */
+      --page-gradient-black-start: 74%;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      min-height: 100vh;
+      background: linear-gradient(
+        180deg,
+        var(--bg-gradient-top) 0%,
+        #071018 28%,
+        #030508 52%,
+        #08080a 64%,
+        var(--bg-gradient-bottom) var(--page-gradient-black-start),
+        var(--bg-gradient-bottom) 100%
+      );
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 15px;
+      line-height: 1.6;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--gold);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .site-header {
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 28px 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 10;
+    }
+
+    .logo {
+      width: 36px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo img {
+      width: 22px;
+      height: 22px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links a {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: inherit;
+      font-weight: inherit;
+      line-height: 1;
+      padding: 10px 14px;   /* bigger hover target */
+      border-radius: 999px;
+      transition: background 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .nav-links a:hover {
+      text-decoration: none;
+    }
+
+    .nav-links a:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .nav-links a.nav-link--near:hover {
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 6px;
+    }
+
+    .nav-links a.nav-link--near.is-near {
+      background: transparent;
+      box-shadow: none;
+      filter: none;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 6px;
+    }
+
+    /* Make clicking "near" links still navigate */
+    .nav-links a.nav-link--near::before {
+      content: "";
+      position: absolute;
+      inset: -18px -18px -18px -18px;
+      border-radius: 999px;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .hero {
+      position: relative;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: 8px 32px 0;
+      text-align: center;
+      overflow: visible;
+    }
+
+    /* Ray fan: SVG apex sits at bottom-center of graphic → align to globe crown, fan upward */
+    .hero-rays {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 0;
+      width: 100vw;
+      max-width: 1920px;
+      height: min(82vh, 920px);
+      bottom: clamp(88px, 19vw, 260px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .hero-rays img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      display: block;
+      opacity: 0.92;
+      transform-origin: center bottom;
+      will-change: transform, opacity, filter;
+    }
+
+    .hero-rays img.rays-rise {
+      animation: rays-rise 1100ms cubic-bezier(0.15, 0.95, 0.2, 1) both;
+    }
+
+    @keyframes rays-rise {
+      0% {
+        opacity: 0;
+        transform: translateY(70px) scaleY(0.72);
+        filter: blur(6px) brightness(1.08);
+      }
+      100% {
+        opacity: 0.98;
+        transform: translateY(0) scaleY(1);
+        filter: blur(0px) brightness(1.08);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-rays img.rays-rise {
+        animation: none;
+      }
+    }
+
+    .title-wrap {
+      margin: 0;
+      padding: 4px 4px 0;
+      overflow: visible;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      margin: 0;
+      padding-top: 0.02em;
+      margin-top: -0.04em;
+      font-family: "Oswald", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 13.2vw, 9.25rem);
+      line-height: 0.86;
+      letter-spacing: 0.015em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      background: linear-gradient(180deg, #ffffff 0%, #ffffff 12%, #7a8796 48%, #2a3340 82%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.45)) drop-shadow(0 2px 0 rgba(255, 255, 255, 0.06));
+    }
+
+    .hero-krishna-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(44px, 14vw, 148px);
+      margin-top: calc(clamp(-4.5rem, -11vw, -2rem) + 10px);
+      padding-bottom: 4px;
+      position: relative;
+      z-index: 3;
+    }
+
+    .hero-chevron {
+      flex-shrink: 0;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      opacity: 0.92;
+    }
+
+    .hero-chevron--left {
+      border-width: 16px 22px 16px 0;
+      border-color: transparent var(--chevron) transparent transparent;
+    }
+
+    .hero-chevron--right {
+      border-width: 16px 0 16px 22px;
+      border-color: transparent transparent transparent var(--chevron);
+    }
+
+    .hero-chevron-hit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 10px 14px;
+      margin: -10px -14px;
+      color: inherit;
+      font: inherit;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      transition: opacity 0.15s ease, filter 0.15s ease;
+    }
+
+    .hero-chevron-hit:hover .hero-chevron {
+      opacity: 1;
+      filter: brightness(1.2);
+    }
+
+    .hero-chevron-hit:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .characters {
+      scroll-margin-top: 1.25rem;
+      max-width: var(--maxw);
+      margin: 0 auto;
+      padding: clamp(28px, 5vw, 52px) clamp(20px, 4vw, 32px) clamp(36px, 6vw, 64px);
+    }
+
+    .characters__title {
+      margin: 0 0 clamp(18px, 3vw, 28px);
+      font-size: clamp(12px, 1.8vw, 14px);
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .characters__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 118px), 1fr));
+      gap: clamp(10px, 2vw, 18px);
+    }
+
+    .characters__item {
+      margin: 0;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.28);
+      cursor: pointer;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .characters__item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.35);
+    }
+
+    .characters__item:focus-within {
+      box-shadow: 0 0 0 2px var(--gold);
+    }
+
+    .characters__item img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      object-position: center bottom;
+    }
+
+    .characters__caption {
+      margin-top: 6px;
+      font-size: 10px;
+      line-height: 1.3;
+      letter-spacing: 0.04em;
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .hero-krishna-frame {
+      width: clamp(118px, 30vw, 176px);
+      height: clamp(200px, 48vw, 280px);
+      flex-shrink: 0;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      overflow: visible;
+      background: transparent;
+    }
+
+    .hero-krishna {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center bottom;
+      display: block;
+    }
+
+    .globe-stage {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: min(480px, 94vw);
+      margin: clamp(16px, 4vw, 32px) auto 0;
+    }
+
+    .hero-god-name {
+      margin: 20px auto 0;
+      max-width: var(--maxw);
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.78);
+      text-align: center;
+      position: relative;
+      z-index: 4;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+      pointer-events: none;
+    }
+
+    .hero-stars {
+      position: absolute;
+      left: 50%;
+      top: clamp(148px, 20vw, 248px);
+      width: clamp(160px, 22vw, 240px);
+      height: clamp(180px, 28vw, 300px);
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .hero-stars--right {
+      transform: translateX(clamp(70px, 16vw, 170px));
+    }
+
+    .hero-stars--left {
+      transform: translateX(calc(-1 * clamp(70px, 16vw, 170px) - clamp(160px, 22vw, 240px)));
+    }
+
+    .hero-star {
+      position: absolute;
+      width: var(--star-size, 6px);
+      height: var(--star-size, 6px);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 14px rgba(255, 255, 255, 0.55);
+      border: 0;
+      padding: 0;
+      pointer-events: auto;
+      cursor: pointer;
+      opacity: var(--star-alpha, 0.9);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+    }
+
+    .hero-star:hover,
+    .hero-star:focus-visible {
+      transform: scale(1.25);
+      box-shadow: 0 0 18px rgba(255, 255, 255, 0.75), 0 0 30px rgba(212, 175, 55, 0.18);
+      opacity: 1;
+      outline: none;
+    }
+
+    .star-tooltip {
+      position: fixed;
+      z-index: 50;
+      width: min(360px, calc(100vw - 40px));
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(0, 0, 0, 0.55);
+      box-shadow: 0 0 0 1px rgba(212, 175, 55, 0.22), 0 18px 50px rgba(0, 0, 0, 0.55);
+      color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+      transform: translateY(6px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease, transform 0.12s ease;
+    }
+
+    .star-tooltip.is-open {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .star-tooltip__title {
+      display: none;
+    }
+
+    .star-tooltip__body {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      white-space: pre-line;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .page-copyright {
+      width: 100%;
+      padding: 18px 20px 28px;
+      text-align: center;
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    .hero-play-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: clamp(14px, 3.5vw, 26px);
+      padding: 12px 32px;
+      font-family: var(--font-mono);
+      font-weight: 400;
+      font-size: clamp(14px, 2.8vw, 16px);
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      color: #0d1118;
+      background: linear-gradient(180deg, #fffef8 0%, #fff3a8 28%, #ffe24a 55%, #f5c518 100%);
+      border: 1px solid rgba(255, 240, 160, 0.85);
+      border-radius: 999px;
+      box-shadow:
+        0 4px 28px rgba(255, 220, 90, 0.55),
+        0 0 36px rgba(255, 210, 70, 0.35),
+        inset 0 2px 0 rgba(255, 255, 255, 0.75);
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+    }
+
+    .hero-play-btn:hover {
+      color: #0d1118;
+      text-decoration: none;
+      transform: translateY(-2px);
+      filter: brightness(1.08) saturate(1.08);
+      box-shadow:
+        0 10px 40px rgba(255, 220, 100, 0.65),
+        0 0 48px rgba(255, 215, 90, 0.45),
+        inset 0 2px 0 rgba(255, 255, 255, 0.85);
+    }
+
+    .hero-play-btn:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 3px;
+    }
+
+    .globe-svg {
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      display: block;
+      filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+    }
+
+    @media (max-width: 768px) {
+      .hero-rays {
+        height: min(58vh, 600px);
+        bottom: clamp(48px, 30vw, 160px);
+      }
+    }
+
+    .hook-marquee {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-top: 0;
+      background: var(--marquee-pink);
+      overflow: hidden;
+      padding: 11px 0;
+      border: 0;
+      position: relative;
+    }
+
+    .hook-marquee__up-cues {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-end;
+      gap: clamp(20px, 5.5vw, 52px);
+      padding-left: clamp(12px, 3vw, 28px);
+      padding-right: clamp(12px, 3vw, 28px);
+      pointer-events: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hook-marquee__up-cues--before {
+      margin-top: clamp(28px, 5vw, 48px);
+      margin-bottom: 5px;
+    }
+
+    .hook-marquee__up-cues--after {
+      margin-top: 5px;
+      margin-bottom: clamp(12px, 2.5vw, 28px);
+    }
+
+    /* Tiny grey "star speckles" below the pink line */
+    .hook-marquee::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -42px;
+      height: 56px;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 8% 35%, rgba(210, 210, 210, 0.55) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 16% 62%, rgba(210, 210, 210, 0.35) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 24% 28%, rgba(210, 210, 210, 0.45) 0 0.9px, transparent 1.1px),
+        radial-gradient(circle at 33% 70%, rgba(210, 210, 210, 0.3) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 41% 44%, rgba(210, 210, 210, 0.5) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 52% 66%, rgba(210, 210, 210, 0.35) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 60% 30%, rgba(210, 210, 210, 0.42) 0 0.9px, transparent 1.1px),
+        radial-gradient(circle at 68% 58%, rgba(210, 210, 210, 0.32) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 76% 22%, rgba(210, 210, 210, 0.5) 0 1px, transparent 1.2px),
+        radial-gradient(circle at 84% 64%, rgba(210, 210, 210, 0.34) 0 0.8px, transparent 1px),
+        radial-gradient(circle at 91% 38%, rgba(210, 210, 210, 0.45) 0 0.9px, transparent 1.1px),
+        radial-gradient(circle at 96% 72%, rgba(210, 210, 210, 0.28) 0 0.8px, transparent 1px);
+      opacity: 0.8;
+      filter: blur(0.1px);
+    }
+
+    .hook-marquee__track {
+      display: flex;
+      width: max-content;
+      animation: hook-marquee 28s linear infinite;
+    }
+
+    .hook-marquee__seq {
+      flex-shrink: 0;
+      padding-right: 3rem;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.02em;
+      line-height: 1.4;
+      text-transform: none;
+      color: #ffffff;
+      white-space: nowrap;
+    }
+
+    @keyframes hook-marquee {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    .narrative {
+      position: relative;
+      max-width: var(--maxw);
+      margin: 48px auto 0;
+      padding: 24px 32px clamp(72px, 12vw, 120px);
+    }
+
+    .story-scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: clamp(5px, 1vw, 8px);
+      margin: clamp(8px, 2.5vw, 24px) auto clamp(20px, 5vw, 52px);
+      opacity: 1;
+      pointer-events: none;
+    }
+
+    .story-scroll-hint--lower {
+      margin-top: clamp(28px, 5vw, 48px);
+    }
+
+    .story-scroll-hint__chev {
+      width: 0;
+      height: 0;
+      border-left: clamp(7px, 1.35vw, 10px) solid transparent;
+      border-right: clamp(7px, 1.35vw, 10px) solid transparent;
+      border-bottom: clamp(8px, 1.55vw, 11px) solid rgba(110, 115, 125, 0.45);
+      animation: story-chev-pulse 1.25s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      will-change: transform, filter;
+    }
+
+    /* Bottom chevron (last in column) flashes first, then upward */
+    .story-scroll-hint__chev:nth-child(1) {
+      animation-delay: 0.34s;
+    }
+
+    .story-scroll-hint__chev:nth-child(2) {
+      animation-delay: 0.17s;
+    }
+
+    .story-scroll-hint__chev:nth-child(3) {
+      animation-delay: 0s;
+    }
+
+    .story-scroll-hint--footer-rail {
+      margin: 0;
+      gap: clamp(4px, 0.85vw, 7px);
+    }
+
+    .site-footer__up-cues {
+      grid-column: 1 / -1;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-end;
+      gap: clamp(20px, 5.5vw, 52px);
+      padding: clamp(10px, 2vw, 20px) clamp(12px, 3vw, 28px) 5px;
+      pointer-events: none;
+      position: relative;
+      z-index: 2;
+    }
+
+    @keyframes story-chev-pulse {
+      0%,
+      32%,
+      100% {
+        border-bottom-color: rgba(95, 100, 110, 0.35);
+        filter: drop-shadow(0 0 0 rgba(255, 255, 255, 0));
+        transform: translateY(0) scale(1);
+      }
+
+      14% {
+        border-bottom-color: #ffffff;
+        filter: drop-shadow(0 0 12px rgba(255, 255, 255, 1))
+          drop-shadow(0 0 5px rgba(255, 255, 255, 0.95));
+        transform: translateY(-5px) scale(1.14);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .story-scroll-hint__chev {
+        animation: none;
+        border-bottom-color: rgba(255, 255, 255, 0.5);
+        filter: none;
+        transform: none;
+      }
+    }
+
+    .row {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 36px;
+      align-items: center;
+      margin-bottom: clamp(48px, 8vw, 96px);
+    }
+
+    @media (min-width: 769px) {
+      .row {
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(24px, 3.5vw, 36px);
+        min-height: 320px;
+        align-items: center;
+      }
+
+      .row.text-left .col-text {
+        grid-column: 1;
+        justify-self: end;
+        max-width: 380px;
+        text-align: center;
+      }
+
+      .row.text-left .col-visual {
+        grid-column: 2;
+        justify-self: start;
+      }
+
+      .row.text-right .col-visual {
+        grid-column: 1;
+        justify-self: end;
+      }
+
+      .row.text-right .col-text {
+        grid-column: 2;
+        justify-self: start;
+        max-width: 380px;
+        text-align: center;
+      }
+    }
+
+    .col-text {
+      text-align: center;
+    }
+
+    .col-text p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.65;
+      color: rgba(255, 255, 255, 0.92);
+      max-width: 42rem;
+      text-align: center;
+    }
+
+    .col-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (min-width: 769px) {
+      .row.text-left .col-visual {
+        justify-content: flex-start;
+      }
+
+      .row.text-right .col-visual {
+        justify-content: flex-end;
+      }
+    }
+
+    .col-visual img {
+      max-width: min(100%, 340px);
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .col-visual.they-red img {
+      max-width: min(100%, 300px);
+    }
+
+    .col-visual.they-orange img {
+      max-width: min(100%, 280px);
+    }
+
+    .col-visual.they-red img,
+    .col-visual.they-orange img {
+      mix-blend-mode: normal;
+    }
+
+    .site-footer {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      background: #000;
+    }
+
+    .site-footer__dialogue {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: stretch;
+      gap: 0;
+      min-height: min(44vh, 440px);
+      width: 100%;
+      max-width: none;
+      margin: 0;
+      padding: 0 0 clamp(48px, 8vw, 96px);
+      background: #000;
+    }
+
+    .site-footer__text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(28px, 4vw, 48px) clamp(20px, 3vw, 32px);
+      text-align: center;
+      background: #000;
+    }
+
+    .site-footer__text p {
+      margin: 0 auto;
+      max-width: 34em;
+      font-size: 14px;
+      line-height: 1.68;
+      font-weight: 400;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.95);
+      transform: translateX(30px);
+    }
+
+    .site-footer__art {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      justify-content: flex-end;
+      margin: 0;
+      padding: 0;
+      line-height: 0;
+      background: #000;
+      overflow: hidden;
+      min-height: min(42vh, 420px);
+    }
+
+    .site-footer__art img {
+      position: relative;
+      z-index: 0;
+      display: block;
+      margin: 0;
+      margin-left: auto;
+      max-width: 100%;
+      max-height: min(78vh, 880px);
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      object-position: right bottom;
+      transform: translateY(-56px);
+      opacity: 1;
+    }
+
+    @media (min-width: 769px) {
+      .site-footer__dialogue {
+        grid-template-columns: minmax(260px, min(42vw, 480px)) minmax(0, 1fr);
+        align-items: stretch;
+        column-gap: clamp(16px, 2.8vw, 32px);
+        min-height: clamp(460px, 58vh, 760px);
+      }
+
+      .site-footer__text {
+        align-items: center;
+        justify-content: center;
+        padding: clamp(24px, 3vw, 40px) clamp(16px, 2vw, 28px) clamp(24px, 3vw, 40px)
+          max(32px, calc((100vw - var(--maxw)) / 2 + 32px));
+        text-align: center;
+      }
+
+      .site-footer__text p {
+        margin: 0 auto;
+        max-width: min(28em, 100%);
+        text-align: center;
+      }
+
+      .site-footer__art img {
+        position: relative;
+        inset: auto;
+        margin-left: auto;
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        object-position: right bottom;
+        transform: translateY(-56px);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .row.text-left,
+      .row.text-right {
+        grid-template-columns: 1fr;
+      }
+
+      .row .col-text,
+      .row .col-visual {
+        grid-column: auto !important;
+        justify-self: center !important;
+        max-width: 100% !important;
+      }
+
+      .site-header,
+      .hero,
+      .narrative {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+
+      .site-footer__art img {
+        position: relative;
+        inset: auto;
+        margin-left: auto;
+        max-width: 100%;
+        max-height: min(70vh, 900px);
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        object-position: right bottom;
+        transform: translateY(-40px);
+      }
+
+      .site-footer__text {
+        padding-left: clamp(16px, 4vw, 28px);
+        padding-right: 4px;
+        padding-top: 20px;
+        padding-bottom: 28px;
+      }
+    }
+  </style>
+</head>
+<body id="top">
+  <header class="site-header">
+    <div class="logo" aria-hidden="true"><img src="assets/svgs/Logo.svg" alt="" width="22" height="22" /></div>
+    <nav class="nav-links">
+      <a class="nav-link--near nav-link--sources" href="./source-list.html">Source List →</a>
+      <a class="nav-link--near nav-link--context" href="./context.html">Context →</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-rays" aria-hidden="true">
+      <img
+        src="assets/svgs/Artboard%201.svg?v=2"
+        alt=""
+        width="2480"
+        height="2575"
+      />
+    </div>
+    <div class="title-wrap">
+      <h1>Divide in Divine</h1>
+    </div>
+    <div class="hero-krishna-row">
+      <button type="button" class="hero-chevron-hit" data-hero-step="-1" aria-label="Previous character">
+        <span class="hero-chevron hero-chevron--left" aria-hidden="true"></span>
+      </button>
+      <div class="hero-krishna-frame">
+        <img
+          id="hero-character"
+          class="hero-krishna"
+          src="assets/pngs/Balakrishnan_png.png"
+          alt="Balakrishna"
+          width="400"
+          height="800"
+        />
+      </div>
+      <button type="button" class="hero-chevron-hit" data-hero-step="1" aria-label="Next character">
+        <span class="hero-chevron hero-chevron--right" aria-hidden="true"></span>
+      </button>
+    </div>
+    <div class="hero-stars hero-stars--left" aria-label="God info stars left"></div>
+    <div class="hero-stars hero-stars--right" aria-label="God info stars right"></div>
+    <div id="hero-god-name" class="hero-god-name">Balakrishna</div>
+    <div class="globe-stage">
+      <img
+        class="globe-svg"
+        src="assets/svgs/globe.svg"
+        alt=""
+        width="1280"
+        height="1280"
+        aria-hidden="true"
+      />
+      <a class="hero-play-btn" href="play.html">Let's Play</a>
+    </div>
+  </section>
+
+  <section class="characters" id="characters" aria-label="Character figures">
+    <h2 class="characters__title">Meet the Divine</h2>
+    <div class="characters__grid">
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/ayyanar-png.png" alt="Ayyanar" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Ayyanar</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Balakrishnan_png.png" alt="Balakrishna" width="400" height="800" loading="lazy" />
+        <figcaption class="characters__caption">Balakrishna</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Durga-png.png" alt="Durga" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Durga</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Hanuman-png.png" alt="Hanuman" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Hanuman</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/karuppusamy-png.png" alt="Karuppusamy" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Karuppusamy</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Khandoba.png" alt="Khandoba" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Khandoba</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Lakshmi-png.trimmed.png" alt="Lakshmi" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Lakshmi</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Mariamma-png.png" alt="Mariamma" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Mariamma</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Meenakshi-png.png" alt="Meenakshi" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Meenakshi</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Muni-png.png" alt="Muni" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Muni</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Murugan-png.png?v=2" alt="Murugan" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Murugan</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Pabuji-png.png" alt="Pabuji" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Pabuji</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Parashurama-png.png" alt="Parashurama" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Parashurama</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Poleramma.jpg" alt="Poleramma" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Poleramma</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Saraswathi-png.png" alt="Saraswati" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Saraswati</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Shani-png.png" alt="Shani" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Shani</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Shrinathji-png.png" alt="Shrinathji" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Shrinathji</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Siva-png.png" alt="Siva" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Siva</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Venkateshwar-png.png" alt="Venkateshwara" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Venkateshwara</figcaption>
+      </figure>
+      <figure class="characters__item" tabindex="0">
+        <img src="assets/pngs/Vishnu-png.png" alt="Vishnu" width="400" height="500" loading="lazy" />
+        <figcaption class="characters__caption">Vishnu</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="hook-marquee__up-cues hook-marquee__up-cues--before" aria-hidden="true" title="Scroll up for more">
+    <div class="story-scroll-hint story-scroll-hint--footer-rail">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+    <div class="story-scroll-hint story-scroll-hint--footer-rail">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+    <div class="story-scroll-hint story-scroll-hint--footer-rail">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+  </div>
+
+  <div class="hook-marquee" aria-label="Refrain">
+    <div class="hook-marquee__track">
+      <div class="hook-marquee__seq">
+        What Exists Above Often Reflects What Exists Below.&nbsp;&nbsp; What Exists Above Often Reflects What
+        Exists Below.&nbsp;&nbsp; What Exists Above Often Reflects What Exists Below.&nbsp;&nbsp; What Exists Above
+        Often Reflects What Exists Below.&nbsp;&nbsp;
+      </div>
+      <div class="hook-marquee__seq" aria-hidden="true">
+        What Exists Above Often Reflects What Exists Below.&nbsp;&nbsp; What Exists Above Often Reflects What
+        Exists Below.&nbsp;&nbsp; What Exists Above Often Reflects What Exists Below.&nbsp;&nbsp; What Exists Above
+        Often Reflects What Exists Below.&nbsp;&nbsp;
+      </div>
+    </div>
+  </div>
+
+  <div class="hook-marquee__up-cues hook-marquee__up-cues--after" aria-hidden="true" title="Scroll up for more">
+    <div class="story-scroll-hint story-scroll-hint--footer-rail">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+    <div class="story-scroll-hint story-scroll-hint--footer-rail">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+    <div class="story-scroll-hint story-scroll-hint--footer-rail">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+  </div>
+
+  <div class="narrative" id="narrative">
+    <section class="row text-left">
+      <div class="col-text">
+        <p>
+          As you move through this space, take part in unfamiliarity. Feel the discomfort and when you do, pause for a moment and draw the connection. Is this something new or does it echo something you already know?
+        </p>
+      </div>
+      <div class="col-visual they-red">
+        <img
+          src="assets/images/story/ae85213c25dd7d2712cc2f8ffc2b153f.png"
+          alt="Theyyam performer in red and black regalia"
+          width="600"
+          height="900"
+        />
+      </div>
+    </section>
+
+    <div class="story-scroll-hint" aria-hidden="true" title="More above">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+
+    <section class="row text-right">
+      <div class="col-visual they-orange">
+        <img
+          src="assets/images/story/256993868e1de51cde6bc80129654821.png"
+          alt="Theyyam performer in orange and red costume"
+          width="600"
+          height="900"
+        />
+      </div>
+      <div class="col-text">
+        <p>
+          I’ve seen a lot... who gets remembered, who gets ignored, and how even the divine has its own quiet pecking order. Things up here aren’t as perfect or balanced as they might seem. So I brought you here. This isn’t just a place to look at myths, it’s a place to play with them. To compare gods, to weigh them, to see what happens when you start putting value on something that’s usually unquestioned.
+        </p>
+      </div>
+    </section>
+
+    <div class="story-scroll-hint story-scroll-hint--lower" aria-hidden="true" title="More above">
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+      <span class="story-scroll-hint__chev"></span>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div id="panjurli" class="site-footer__dialogue" aria-label="Panjurli">
+      <div class="site-footer__text">
+        <p>
+          I am Panjurli Daiva. A spirit deity. I wander where forests grow thick and stories don’t quite belong to one world or another. People call on me in rituals, but I’m just as comfortable watching from the sidelines, moving between gods and humans, picking up things others miss.
+        </p>
+      </div>
+      <div class="site-footer__art">
+        <img
+          src="assets/images/story/theyyam-footer-hero.png"
+          alt="Theyyam ritual at night with fire, drums, and dance"
+          width="1200"
+          height="1800"
+        />
+      </div>
+
+      <div class="site-footer__up-cues" aria-hidden="true" title="Scroll up for more">
+        <div class="story-scroll-hint story-scroll-hint--footer-rail">
+          <span class="story-scroll-hint__chev"></span>
+          <span class="story-scroll-hint__chev"></span>
+          <span class="story-scroll-hint__chev"></span>
+        </div>
+        <div class="story-scroll-hint story-scroll-hint--footer-rail">
+          <span class="story-scroll-hint__chev"></span>
+          <span class="story-scroll-hint__chev"></span>
+          <span class="story-scroll-hint__chev"></span>
+        </div>
+        <div class="story-scroll-hint story-scroll-hint--footer-rail">
+          <span class="story-scroll-hint__chev"></span>
+          <span class="story-scroll-hint__chev"></span>
+          <span class="story-scroll-hint__chev"></span>
+        </div>
+      </div>
+    </div>
+    <div class="page-copyright">© 2026 Kaviya Selvaraj</div>
+  </footer>
+  <div id="star-tooltip" class="star-tooltip" role="tooltip" aria-hidden="true">
+    <div class="star-tooltip__title" id="star-tooltip-title"></div>
+    <p class="star-tooltip__body" id="star-tooltip-body"></p>
+  </div>
+  <audio id="bg-audio" src="assets/music/DID_Sound.mp3" loop preload="auto"></audio>
+  <audio id="click-audio" src="assets/music/Mouse%20click.mp3" preload="auto"></audio>
+  <script>
+    (function () {
+      // Background audio: browsers may block autoplay until first user gesture.
+      (function () {
+        var audio = document.getElementById("bg-audio");
+        if (!audio) return;
+        audio.volume = 0.375;
+        audio.playsInline = true;
+        audio.preload = "auto";
+
+        var KEY_T = "did-audio-time";
+        var KEY_P = "did-audio-playing";
+
+        function safeGet(key) {
+          try {
+            return sessionStorage.getItem(key);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function safeSet(key, val) {
+          try {
+            sessionStorage.setItem(key, String(val));
+          } catch (e) {}
+        }
+
+        function restoreTimeWhenReady() {
+          var raw = safeGet(KEY_T);
+          var t = raw ? parseFloat(raw) : NaN;
+          if (!isFinite(t) || t < 0) return;
+
+          function apply() {
+            try {
+              var dur = audio.duration;
+              if (isFinite(dur) && dur > 0) {
+                audio.currentTime = t % dur;
+              } else {
+                audio.currentTime = t;
+              }
+            } catch (e) {}
+          }
+
+          if (isFinite(audio.duration) && audio.duration > 0) {
+            apply();
+          } else {
+            audio.addEventListener("loadedmetadata", apply, { once: true });
+          }
+        }
+
+        var gateShown = false;
+
+        function removeSoundGate() {
+          try {
+            var el = document.getElementById("sound-gate");
+            if (el && el.parentNode) el.parentNode.removeChild(el);
+          } catch (e) {}
+        }
+
+        function showSoundGate() {
+          if (gateShown) return;
+          gateShown = true;
+          try {
+            if (document.getElementById("sound-gate")) return;
+            var wrap = document.createElement("div");
+            wrap.id = "sound-gate";
+            wrap.style.position = "fixed";
+            wrap.style.left = "50%";
+            wrap.style.bottom = "16px";
+            wrap.style.transform = "translateX(-50%)";
+            wrap.style.zIndex = "9999";
+            wrap.style.padding = "12px 14px";
+            wrap.style.borderRadius = "14px";
+            wrap.style.background = "rgba(0, 0, 0, 0.45)";
+            wrap.style.backdropFilter = "blur(10px)";
+            wrap.style.boxShadow = "0 0 0 1px rgba(212, 175, 55, 0.22), 0 18px 50px rgba(0, 0, 0, 0.55)";
+            wrap.style.color = "rgba(255, 255, 255, 0.92)";
+            wrap.style.fontSize = "14px";
+            wrap.style.lineHeight = "1.35";
+            wrap.style.textAlign = "center";
+            wrap.style.maxWidth = "260px";
+            wrap.innerHTML = 'click anywhere to enable <span style="color: var(--gold, #d4af37)">sound</span>';
+            document.body.appendChild(wrap);
+          } catch (e) {}
+        }
+
+        function tryPlay(fromUserGesture) {
+          try {
+            if (fromUserGesture) {
+              audio.muted = false;
+              audio.volume = 0.375;
+            }
+            var p = audio.play();
+            if (p && typeof p.then === "function") {
+              p.then(function () {
+                removeSoundGate();
+              }).catch(function () {
+                showSoundGate();
+              });
+            }
+          } catch (e) {}
+        }
+
+        restoreTimeWhenReady();
+
+        // Remember playback position so it can resume on next page.
+        function persist() {
+          try {
+            if (!isFinite(audio.currentTime)) return;
+            safeSet(KEY_T, audio.currentTime);
+            safeSet(KEY_P, !audio.paused && !audio.ended ? "1" : "0");
+          } catch (e) {}
+        }
+
+        window.addEventListener("pagehide", persist, { capture: true });
+        window.addEventListener("beforeunload", persist, { capture: true });
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "hidden") persist();
+        });
+
+        window.addEventListener("load", tryPlay, { passive: true });
+        document.addEventListener(
+          "pointerdown",
+          function () {
+            tryPlay(true);
+          },
+          { passive: true, once: true }
+        );
+        document.addEventListener(
+          "keydown",
+          function () {
+            tryPlay(true);
+          },
+          { passive: true, once: true }
+        );
+
+        // If user was already listening on previous page, try to resume immediately.
+        if (safeGet(KEY_P) === "1") {
+          window.addEventListener("load", tryPlay, { passive: true, once: true });
+        }
+      })();
+
+      // Click SFX on any interaction.
+      (function () {
+        var sfx = document.getElementById("click-audio");
+        if (!sfx) return;
+        sfx.volume = 0.55;
+        sfx.preload = "auto";
+        sfx.playsInline = true;
+
+        // Clean click SFX: exactly once per actual click on something clickable.
+        var pool = [];
+        function makePlayer() {
+          try {
+            var a = new Audio(sfx.currentSrc || sfx.src);
+            a.preload = "auto";
+            a.volume = sfx.volume;
+            a.playsInline = true;
+            return a;
+          } catch (e) {
+            return null;
+          }
+        }
+        function getPlayer() {
+          for (var i = 0; i < pool.length; i++) {
+            var a = pool[i];
+            if (a && (a.paused || a.ended)) return a;
+          }
+          var fresh = makePlayer();
+          if (fresh) pool.push(fresh);
+          return fresh || sfx;
+        }
+        function playClick() {
+          var a = getPlayer();
+          try {
+            a.currentTime = 0;
+          } catch (e) {}
+          try {
+            var p = a.play();
+            if (p && typeof p.catch === "function") p.catch(function () {});
+          } catch (e) {}
+        }
+
+        function isPlainLeftClick(e) {
+          return (
+            !e.defaultPrevented &&
+            e.button === 0 &&
+            !e.metaKey &&
+            !e.ctrlKey &&
+            !e.shiftKey &&
+            !e.altKey
+          );
+        }
+
+        function isClickableTarget(el) {
+          if (!el || !el.closest) return false;
+          return !!el.closest(
+            "a[href],button,input[type='button'],input[type='submit'],input[type='reset'],[role='button'],summary,label"
+          );
+        }
+
+        function shouldInterceptHref(href) {
+          if (!href) return false;
+          if (href[0] === "#") return false;
+          if (/^(mailto:|tel:|javascript:)/i.test(href)) return false;
+          return true;
+        }
+
+        document.addEventListener(
+          "click",
+          function (e) {
+            if (!isClickableTarget(e.target)) return;
+            playClick();
+
+            // If it's a normal link navigation, delay slightly so the sound is audible.
+            if (!isPlainLeftClick(e)) return;
+            var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+            if (!a) return;
+            if (a.target && a.target !== "_self") return;
+            var href = a.getAttribute("href") || "";
+            if (!shouldInterceptHref(href)) return;
+            e.preventDefault();
+            setTimeout(function () {
+              window.location.href = href;
+            }, 120);
+          },
+          true
+        );
+      })();
+
+      if ("scrollRestoration" in history) {
+        history.scrollRestoration = "manual";
+      }
+
+      // Show landing first, then auto-scroll to Panjurli on every refresh.
+      (function () {
+        try {
+          if (sessionStorage.getItem("divide-skip-footer-scroll") === "1") {
+            sessionStorage.removeItem("divide-skip-footer-scroll");
+            return;
+          }
+        } catch (e) {}
+        var target = document.getElementById("panjurli");
+        if (!target) return;
+
+        // Give the hero a moment to be seen first.
+        window.addEventListener(
+          "load",
+          function () {
+            window.scrollTo(0, 0);
+            setTimeout(function () {
+              var startY = window.scrollY || window.pageYOffset || 0;
+              var targetY = target.getBoundingClientRect().top + startY;
+              var durationMs = 1000;
+              var startT = performance.now();
+
+              function easeInOut(t) {
+                return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+              }
+
+              function step(now) {
+                var p = Math.min(1, (now - startT) / durationMs);
+                var y = startY + (targetY - startY) * easeInOut(p);
+                window.scrollTo(0, y);
+                if (p < 1) requestAnimationFrame(step);
+              }
+
+              requestAnimationFrame(step);
+            }, 50);
+          },
+          { passive: true }
+        );
+      })();
+
+      var nearLinks = Array.prototype.slice.call(document.querySelectorAll(".nav-links a.nav-link--near"));
+      if (nearLinks.length) {
+        var NEAR_PX = 24;
+        function distanceToRect(x, y, rect) {
+          var dx = Math.max(rect.left - x, 0, x - rect.right);
+          var dy = Math.max(rect.top - y, 0, y - rect.bottom);
+          return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        document.addEventListener(
+          "mousemove",
+          function (e) {
+            nearLinks.forEach(function (link) {
+              var r = link.getBoundingClientRect();
+              var d = distanceToRect(e.clientX, e.clientY, r);
+              link.classList.toggle("is-near", d <= NEAR_PX);
+            });
+          },
+          { passive: true }
+        );
+
+        document.addEventListener(
+          "mouseleave",
+          function () {
+            nearLinks.forEach(function (link) {
+              link.classList.remove("is-near");
+            });
+          },
+          { passive: true }
+        );
+      }
+
+      var slides = [
+        { src: "assets/pngs/ayyanar-png.png", alt: "Ayyanar" },
+        { src: "assets/pngs/Balakrishnan_png.png", alt: "Balakrishna" },
+        { src: "assets/pngs/Durga-png.png", alt: "Durga" },
+        { src: "assets/pngs/Hanuman-png.png", alt: "Hanuman" },
+        { src: "assets/pngs/karuppusamy-png.png", alt: "Karuppusamy" },
+        { src: "assets/pngs/Khandoba.png", alt: "Khandoba" },
+        { src: "assets/pngs/Lakshmi-png.trimmed.png", alt: "Lakshmi" },
+        { src: "assets/pngs/Mariamma-png.png", alt: "Mariamma" },
+        { src: "assets/pngs/Meenakshi-png.png", alt: "Meenakshi" },
+        { src: "assets/pngs/Muni-png.png", alt: "Muni" },
+        { src: "assets/pngs/Murugan-png.png?v=2", alt: "Murugan" },
+        { src: "assets/pngs/Pabuji-png.png", alt: "Pabuji" },
+        { src: "assets/pngs/Parashurama-png.png", alt: "Parashurama" },
+        { src: "assets/pngs/Poleramma.jpg", alt: "Poleramma" },
+        { src: "assets/pngs/Saraswathi-png.png", alt: "Saraswati" },
+        { src: "assets/pngs/Shani-png.png", alt: "Shani" },
+        { src: "assets/pngs/Shrinathji-png.png", alt: "Shrinathji" },
+        { src: "assets/pngs/Siva-png.png", alt: "Siva" },
+        { src: "assets/pngs/Venkateshwar-png.png", alt: "Venkateshwara" },
+        { src: "assets/pngs/Vishnu-png.png", alt: "Vishnu" }
+      ];
+      var img = document.getElementById("hero-character");
+      var nameEl = document.getElementById("hero-god-name");
+      var raysImg = document.querySelector(".hero-rays img");
+      var starsWraps = Array.prototype.slice.call(document.querySelectorAll(".hero-stars"));
+      var tooltip = document.getElementById("star-tooltip");
+      var tooltipTitle = document.getElementById("star-tooltip-title");
+      var tooltipBody = document.getElementById("star-tooltip-body");
+      var buttons = document.querySelectorAll(".hero-krishna-row .hero-chevron-hit[data-hero-step]");
+      var grid = document.querySelector(".characters__grid");
+      if (!img || !slides.length) return;
+
+      var i = 1;
+
+      function baseName(p) {
+        var s = String(p || "");
+        var q = s.indexOf("?");
+        if (q !== -1) s = s.slice(0, q);
+        var hash = s.indexOf("#");
+        if (hash !== -1) s = s.slice(0, hash);
+        var parts = s.split("/");
+        return parts[parts.length - 1] || s;
+      }
+
+      // Prefer resolving by image file name (more stable than alt spelling).
+      // You can extend this map if you add/rename PNGs.
+      var godsByImageFile = {
+        "Venkateshwar-png.png": "Venkateshwara",
+        "karuppusamy-png.png": "Karuppusamy",
+        "Lakshmi-png.trimmed.png": "Lakshmi",
+        "Lakshmi-png.png": "Lakshmi",
+        "Meenakshi-png.png": "Meenakshi Amman"
+      };
+
+      function resolveGodNameFromImage(src, fallbackName) {
+        var bn = baseName(src);
+        if (bn && godsByImageFile[bn]) return godsByImageFile[bn];
+        // Generic fallback: find slide with same basename.
+        var bnNorm = String(bn || "").toLowerCase();
+        for (var si = 0; si < slides.length; si++) {
+          var s = slides[si];
+          if (!s || !s.src) continue;
+          if (baseName(s.src).toLowerCase() === bnNorm) return s.alt || fallbackName;
+        }
+        return fallbackName;
+      }
+
+      var godsInfoText = [
+        "1. Balakrishna",
+        "Form: Child deity (infant Krishna)",
+        "Iconography: Holds a churning rod and rope (butter theft motif)",
+        "Context: Installed by Madhvacharya at Udupi",
+        "Theology: Dvaita Vedanta (Krishna as Supreme Vishnu)",
+        "Symbolism: Divine innocence, intimate devotion (bhakti)",
+        "Narrative Role: Transcends social hierarchy (idol turning toward marginalized devotee)",
+        "",
+        "2. Vishnu",
+        "Form: Supreme sustaining deity (Parabrahman in Vaishnavism)",
+        "Iconography: Four arms holding chakra, conch, mace, lotus",
+        "Attributes: Blue skin, crown, Kaustubha jewel, Shrivatsa mark",
+        "Function: Preserver of cosmic and moral order (dharma)",
+        "Theology: Both saguna (with form) and nirguna (beyond form)",
+        "Association: Inseparable from Lakshmi (grace and mediation)",
+        "",
+        "3. Siva",
+        "Form: Ascetic and cosmic transformer",
+        "Iconography: Ash-covered body, third eye, matted hair with Ganga, crescent moon",
+        "Attributes: Trident (trishula), drum (damaru), serpents, tiger skin",
+        "Function: Dissolution and transformation of the cosmos",
+        "Symbolism: Renunciation, destruction as renewal",
+        "",
+        "4. Parashurama",
+        "Form: Warrior sage",
+        "Identity: Sixth avatar of Vishnu",
+        "Attributes: Axe-bearing Brahmin warrior",
+        "Function: Restorer of dharma through violent correction",
+        "Symbolism: Tension between asceticism and warfare",
+        "",
+        "5. Saraswati",
+        "Form: Goddess of knowledge and arts",
+        "Iconography: White attire, veena, book, rosary, water pot",
+        "Vehicle: Swan or peacock",
+        "Function: Embodies learning, wisdom, and refinement",
+        "Symbolism: Purity, intellect, spiritual knowledge",
+        "",
+        "6. Durga",
+        "Form: Warrior goddess (Shakti)",
+        "Iconography: Multiple arms holding weapons, riding lion/tiger",
+        "Narrative: Slayer of Mahishasura",
+        "Function: Protector of cosmic order",
+        "Symbolism: Balance of nurturing and destructive power",
+        "",
+        "7. Meenakshi Amman",
+        "Form: Regional goddess (Madurai)",
+        "Iconography: Green complexion, fish-shaped eyes, parrot, lotus",
+        "Context: Central deity of Madurai temple",
+        "Symbolism: Sovereignty, fertility, divine femininity",
+        "",
+        "8. Shrinathji",
+        "Form: Adolescent Krishna",
+        "Iconography: Lifting Govardhan Hill",
+        "Tradition: Founded by Vallabhacharya",
+        "Function: Object of intimate seva (devotional service)",
+        "Symbolism: Loving, personal relationship with the divine",
+        "",
+        "9. Venkateshwara",
+        "Form: Standing Vishnu deity",
+        "Location: Tirumala Hills",
+        "Iconography: Four arms, chakra, conch, blessing gesture",
+        "Function: Protector in Kali Yuga",
+        "Symbolism: Compassion, accessibility, salvation",
+        "",
+        "10. Lakshmi",
+        "Form: Goddess of wealth and prosperity",
+        "Association: Consort of Vishnu",
+        "Iconography: Lotus, gold, elephants",
+        "Function: Mediator of divine grace",
+        "Symbolism: Fortune, abundance, auspiciousness",
+        "",
+        "11. Karuppusamy",
+        "Form: Folk warrior deity",
+        "Iconography: Mustached, armed with sword or whip",
+        "Function: Guardian and protector",
+        "Symbolism: Justice, masculinity, local sovereignty",
+        "",
+        "12. Pabuji",
+        "Form: Hero-deity (Rajasthan)",
+        "Iconography: Rajput warrior with horse (Kesar Kalami)",
+        "Mythic Identity: Incarnation of Lakshmana",
+        "Function: Protector deity",
+        "Symbolism: Honor, loyalty, heroism",
+        "",
+        "13. Shani",
+        "Form: Planetary deity (Saturn)",
+        "Function: Dispenses karmic justice",
+        "Symbolism: Equality through karma (not caste)",
+        "Theological Role: Cosmic judge",
+        "",
+        "14. Hanuman",
+        "Form: Divine monkey (Vanara)",
+        "Iconography: Mace, muscular body, devotional posture",
+        "Association: Devotee of Rama",
+        "Function: Strength, protection, devotion",
+        "Symbolism: Bhakti, loyalty, service",
+        "",
+        "15. Muni",
+        "Form: Guardian deity",
+        "Iconography: Weapons (trident, spear), ash-covered body",
+        "Function: Protection and boundary enforcement",
+        "Symbolism: Fierce devotion, Shaivite influence",
+        "",
+        "16. Khandoba",
+        "Form: Warrior deity (regional Siva form)",
+        "Iconography: Sword, trident, horse",
+        "Association: Turmeric rituals",
+        "Function: Protector and regional ruler deity",
+        "Symbolism: Power, fertility, social integration",
+        "",
+        "17. Mariamman",
+        "Form: Goddess of disease and healing",
+        "Iconography: Snakes, trident, fierce or calm expression",
+        "Function: Protection from epidemics",
+        "Symbolism: Fear and healing combined",
+        "",
+        "18. Murugan",
+        "Form: Youthful warrior god",
+        "Iconography: Spear (vel), peacock, multiple heads/arms",
+        "Function: Destroyer of ignorance",
+        "Symbolism: Knowledge, valor, Tamil identity",
+        "",
+        "19. Ayyanar",
+        "Form: Village guardian deity",
+        "Iconography: Mounted on horse, armed",
+        "Function: Protector of village boundaries",
+        "Symbolism: Justice, vigilance",
+        "",
+        "20. Poleramma",
+        "Form: Village goddess (often aniconic)",
+        "Representation: Stone, clay idol, or anthropomorphic form",
+        "Function: Protection from disease and misfortune",
+        "Symbolism: Raw, localized divine power"
+      ].join("\n");
+
+      function parseGodsInfo(text) {
+        var map = {};
+        var lines = text.split(/\r?\n/);
+        var currentName = null;
+        var buf = [];
+        function flush() {
+          if (!currentName) return;
+          map[currentName] = buf.join("\n").trim();
+          buf = [];
+        }
+        for (var li = 0; li < lines.length; li++) {
+          var line = lines[li].trim();
+          var m = line.match(/^\d+\.\s+(.*)$/);
+          if (m) {
+            flush();
+            currentName = m[1].trim();
+            continue;
+          }
+          if (!line) {
+            continue;
+          }
+          buf.push(line);
+        }
+        flush();
+        return map;
+      }
+
+      var godsInfo = parseGodsInfo(godsInfoText);
+      var godsInfoNormIndex = {};
+
+      function normGodKey(s) {
+        return String(s || "")
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "");
+      }
+
+      function rebuildGodsInfoNormIndex() {
+        godsInfoNormIndex = {};
+        Object.keys(godsInfo || {}).forEach(function (k) {
+          godsInfoNormIndex[normGodKey(k)] = k;
+        });
+      }
+
+      rebuildGodsInfoNormIndex();
+
+      // Prefer live `Gods_Info.txt` so edits update without touching this HTML.
+      // Falls back to embedded `godsInfoText` if fetch is unavailable.
+      try {
+        fetch("./assets/text/Gods_Info.txt", { cache: "no-store" })
+          .then(function (r) {
+            if (!r.ok) throw new Error("Gods_Info.txt fetch failed");
+            return r.text();
+          })
+          .then(function (txt) {
+            godsInfo = parseGodsInfo(txt);
+            rebuildGodsInfoNormIndex();
+            // If the hero is already visible, refresh stars to include new lines (e.g., Image Source).
+            if (img && img.alt) {
+              closeTooltip();
+              buildStarsForGod(resolveGodNameFromImage(img.src, img.alt));
+            }
+          })
+          .catch(function () {});
+      } catch (e) {}
+      var godsInfoAliases = {
+        // Back-compat for older spellings, but keep display/content consistent.
+        Karuppaswamy: "Karuppusamy",
+        Karuppuswamy: "Karuppusamy",
+        Venkateswara: "Venkateshwara",
+        "Venkateswara (Balaji)": "Venkateshwara",
+        Venkateshwar: "Venkateshwara",
+        Mariamman: "Mariamma",
+        Meenakshi: "Meenakshi Amman"
+      };
+
+      function resolveGodKey(name) {
+        if (!name) return name;
+        if (godsInfo[name]) return name;
+        var alias = godsInfoAliases[name];
+        if (alias && godsInfo[alias]) return alias;
+        // Last chance: normalized match (handles small spelling differences).
+        var nk = normGodKey(alias || name);
+        var real = godsInfoNormIndex[nk];
+        if (real && godsInfo[real]) return real;
+        return name;
+      }
+
+      function getGodInfoByName(godName) {
+        if (!godName) return "";
+        var key = resolveGodKey(godName);
+        var info = godsInfo[key];
+        if (info) return info;
+
+        // Extra fallback: strip common punctuation/parentheticals and retry.
+        var cleaned = String(godName)
+          .replace(/\(.*?\)/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+        if (cleaned && cleaned !== godName) {
+          key = resolveGodKey(cleaned);
+          info = godsInfo[key];
+          if (info) return info;
+        }
+
+        // Final fallback: normalized direct index
+        var real = godsInfoNormIndex[normGodKey(cleaned || godName)];
+        if (real && godsInfo[real]) return godsInfo[real];
+        return "";
+      }
+
+      function placeTooltipFor(el) {
+        if (!tooltip) return;
+        var r = el.getBoundingClientRect();
+        var pad = 12;
+        var x = Math.min(window.innerWidth - pad, Math.max(pad, r.right + 12));
+        var y = Math.min(window.innerHeight - pad, Math.max(pad, r.top - 6));
+        tooltip.style.left = x + "px";
+        tooltip.style.top = y + "px";
+      }
+
+      function openTooltip(el, godName, line) {
+        if (!tooltip || !tooltipTitle || !tooltipBody) return;
+        var info = getGodInfoByName(godName);
+        if (!info) return;
+        if (!line) return;
+        tooltipTitle.textContent = "";
+        tooltipBody.textContent = line;
+        placeTooltipFor(el);
+        tooltip.classList.add("is-open");
+        tooltip.setAttribute("aria-hidden", "false");
+      }
+
+      function closeTooltip() {
+        if (!tooltip) return;
+        tooltip.classList.remove("is-open");
+        tooltip.setAttribute("aria-hidden", "true");
+      }
+
+      function buildStarsForGod(godName) {
+        if (!starsWraps.length) return;
+        var info = getGodInfoByName(godName);
+        starsWraps.forEach(function (w) {
+          w.innerHTML = "";
+        });
+        if (!info) return;
+
+        function clamp(n, a, b) {
+          return Math.max(a, Math.min(b, n));
+        }
+
+        var lines = info
+          .split(/\r?\n/)
+          .map(function (l) {
+            return l.trim();
+          })
+          .filter(Boolean);
+
+        // Avoid overlaps by doing simple rejection sampling per wrap.
+        // Stores placed circles as {x,y,r} in px coords (wrap-local).
+        var placedByWrap = new Map();
+        starsWraps.forEach(function (w) {
+          placedByWrap.set(w, []);
+        });
+
+        function tryPlaceInWrap(wrap, r) {
+          var rect = wrap.getBoundingClientRect();
+          var w = rect.width || 1;
+          var h = rect.height || 1;
+          var pad = Math.max(8, r + 4);
+          var tries = 45;
+          var placed = placedByWrap.get(wrap) || [];
+
+          for (var t = 0; t < tries; t++) {
+            var x = pad + Math.random() * Math.max(1, w - pad * 2);
+            var y = pad + Math.random() * Math.max(1, h - pad * 2);
+            var ok = true;
+            for (var pi = 0; pi < placed.length; pi++) {
+              var p = placed[pi];
+              var dx = x - p.x;
+              var dy = y - p.y;
+              var minD = r + p.r + 6; // extra gap so they don't visually touch
+              if (dx * dx + dy * dy < minD * minD) {
+                ok = false;
+                break;
+              }
+            }
+            if (!ok) continue;
+
+            placed.push({ x: x, y: y, r: r });
+            placedByWrap.set(wrap, placed);
+            return {
+              leftPct: (x / w) * 100,
+              topPct: (y / h) * 100
+            };
+          }
+
+          // Fallback: if too crowded, just drop it somewhere with padding.
+          var fx = pad + Math.random() * Math.max(1, w - pad * 2);
+          var fy = pad + Math.random() * Math.max(1, h - pad * 2);
+          placed.push({ x: fx, y: fy, r: r });
+          placedByWrap.set(wrap, placed);
+          return {
+            leftPct: (fx / w) * 100,
+            topPct: (fy / h) * 100
+          };
+        }
+
+        // One star per info line (e.g., Form, Iconography, Function...)
+        for (var si = 0; si < lines.length; si++) {
+          var wrap = starsWraps[si % starsWraps.length]; // alternate left/right
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "hero-star";
+          var size = 4 + Math.random() * 4;
+          b.style.setProperty("--star-size", size.toFixed(1) + "px");
+          b.style.setProperty("--star-alpha", (0.55 + Math.random() * 0.45).toFixed(2));
+
+          var r = size / 2;
+          var pos = tryPlaceInWrap(wrap, r);
+          b.style.left = clamp(pos.leftPct, 4, 96).toFixed(2) + "%";
+          b.style.top = clamp(pos.topPct, 4, 96).toFixed(2) + "%";
+
+          b.setAttribute("aria-label", lines[si]);
+          b.dataset.line = lines[si];
+          b.addEventListener("mouseenter", function (e) {
+            openTooltip(e.currentTarget, img.alt, e.currentTarget.dataset.line);
+          });
+          b.addEventListener("mouseleave", closeTooltip);
+          b.addEventListener("focus", function (e) {
+            openTooltip(e.currentTarget, img.alt, e.currentTarget.dataset.line);
+          });
+          b.addEventListener("blur", closeTooltip);
+          wrap.appendChild(b);
+        }
+
+        document.addEventListener("scroll", closeTooltip, { passive: true });
+        window.addEventListener("resize", closeTooltip, { passive: true });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") closeTooltip();
+        });
+      }
+      function show(index) {
+        i = (index + slides.length) % slides.length;
+        var s = slides[i];
+        img.src = s.src;
+        img.alt = s.alt;
+        if (nameEl) nameEl.textContent = s.alt || "";
+        closeTooltip();
+        buildStarsForGod(resolveGodNameFromImage(s.src, s.alt));
+        if (raysImg) {
+          raysImg.classList.remove("rays-rise");
+          // Force reflow so animation restarts
+          void raysImg.offsetWidth;
+          raysImg.classList.add("rays-rise");
+        }
+      }
+
+      buildStarsForGod(resolveGodNameFromImage(img.src, img.alt));
+
+      buttons.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var step = parseInt(btn.getAttribute("data-hero-step"), 10) || 0;
+          show(i + step);
+        });
+      });
+
+      if (grid) {
+        function activateFigure(figure) {
+          var items = Array.prototype.slice.call(grid.querySelectorAll(".characters__item"));
+          var idx = items.indexOf(figure);
+          if (idx !== -1) show(idx);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        grid.addEventListener("click", function (e) {
+          var figure = e.target.closest(".characters__item");
+          if (!figure || !grid.contains(figure)) return;
+          activateFigure(figure);
+        });
+
+        grid.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          var figure = e.target.closest(".characters__item");
+          if (!figure || !grid.contains(figure)) return;
+          e.preventDefault();
+          activateFigure(figure);
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
